@@ -3,6 +3,7 @@ var http = require('http');
   
 http.createServer(function (req, res) {  
     res.write('Welcome to the CI/CD Lab!'); //write a response to the client  
+    
     res.end(); //end the response  
 }).listen(5000); //the server object listens on port 8080   
   
