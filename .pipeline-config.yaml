@@ -1,0 +1,8 @@
+version: '1'
+
+test:
+  image: ibmcom/pipeline-base-image:2.7
+  script: |
+    #!/bin/sh
+    scripts/lint.sh
+    scripts/unit-test.sh
