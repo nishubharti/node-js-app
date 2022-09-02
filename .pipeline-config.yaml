@@ -27,7 +27,7 @@ test:
       set -x
     fi
 
-    source test/test.sh
+    source test/test.js
 
 deploy:
   abort_on_failure: true
