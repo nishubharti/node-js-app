@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "${ONE_PIPELINE_PATH}"/tools/retry
+
 
 
 if [ -f /config/api-key ]; then
