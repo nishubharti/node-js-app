@@ -6,6 +6,20 @@ setup:
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.15
   script: |
     #!/usr/bin/env bash
+    PIPELINE_DEBUG="$(cat /config/PIPELINE_DEBUG)"
+    if [[ "$PIPELINE_DEBUG" == 1 ]]; then
+      trap env EXIT
+      env
+      set -x
+    fi
+    echo "set up completed"
+
+test:
+  abort_on_failure: true
+  dind: true
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.15
+  script: |
+    #!/usr/bin/env bash
     cd ../"$(load_repo app-repo path)"
     npm ci
 
@@ -26,21 +40,6 @@ setup:
       --asset-type "repo" \
       --asset-key "app-repo"
     exit $exit_code
-
-test:
-  abort_on_failure: true
-  dind: true
-  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.15
-  script: |
-    #!/usr/bin/env bash
-    PIPELINE_DEBUG="$(cat /config/PIPELINE_DEBUG)"
-    if [[ "$PIPELINE_DEBUG" == 1 ]]; then
-      trap env EXIT
-      env
-      set -x
-    fi
-
-    source test/test.js
 
 deploy:
   abort_on_failure: true
