@@ -27,6 +27,8 @@ test:
       set -x
     fi
 
+    source test/test.sh
+
 deploy:
   abort_on_failure: true
   dind: true
@@ -39,3 +41,21 @@ deploy:
       env
       set -x
     fi
+
+    source scripts/deploy.sh
+
+
+release:
+  abort_on_failure: true
+  dind: true
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.15
+  script: |
+    #!/usr/bin/env bash
+    PIPELINE_DEBUG="$(cat /config/PIPELINE_DEBUG)"
+    if [[ "$PIPELINE_DEBUG" == 1 ]]; then
+      trap env EXIT
+      env
+      set -x
+    fi
+
+    source scripts/release.sh
