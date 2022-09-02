@@ -4,14 +4,13 @@
 source "${ONE_PIPELINE_PATH}"/tools/retry
 
 
-
 if [ -f /config/api-key ]; then
   IBMCLOUD_API_KEY="$(cat /config/api-key)" # pragma: allowlist secret
 else
   IBMCLOUD_API_KEY="$(get_env ibmcloud-api-key)" # pragma: allowlist secret
 fi
 
-
+export IBMCLOUD_API_KEY
 
 IBMCLOUD_API=$(get_env ibmcloud-api "https://cloud.ibm.com")
 IBMCLOUD_IKS_REGION="$(get_env dev-region | awk -F ":" '{print $NF}')"
