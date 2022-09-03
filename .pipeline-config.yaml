@@ -54,6 +54,9 @@ containerize:
       set -x
     fi
 
+    source scripts/build-setup.sh
+     source scripts/build.sh
+
 
 deploy:
   abort_on_failure: true
