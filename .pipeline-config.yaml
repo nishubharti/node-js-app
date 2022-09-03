@@ -54,9 +54,6 @@ containerize:
       set -x
     fi
 
-    source scripts/build_setup.sh
-    source scripts/build.sh
-
 
 deploy:
   abort_on_failure: true
@@ -87,4 +84,3 @@ release:
       set -x
     fi
 
-    source scripts/release.sh
