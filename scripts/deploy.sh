@@ -30,5 +30,7 @@ else
 
     ibmcloud ks cluster get --cluster "${IBMCLOUD_IKS_CLUSTER_NAME}" --json > "${IBMCLOUD_IKS_CLUSTER_NAME}.json"
     IBMCLOUD_IKS_CLUSTER_ID=$(jq -r '.id' "${IBMCLOUD_IKS_CLUSTER_NAME}.json")
+
+    echo "steps completed for " ${IBMCLOUD_IKS_CLUSTER_ID}
 fi
 
