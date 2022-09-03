@@ -54,8 +54,8 @@ containerize:
       set -x
     fi
 
-    source scripts/build-setup.sh
-     source scripts/build.sh
+    source scripts/build_setup.sh
+    source scripts/build.sh
 
 
 deploy:
