@@ -6,6 +6,7 @@
 #
 
 export GHE_TOKEN="$(cat /config/git-token)"
+export GIT_BRANCH="main"
 
 # shellcheck source=/dev/null
 . "${ONE_PIPELINE_PATH}/tools/get_repo_params"
