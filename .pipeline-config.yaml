@@ -93,6 +93,7 @@ release:
     export TYPE="image"
     export SHA_VAL="$(get_env sha-val)"
     export ARTIFACT_PROVENANCE="$(get_env artifact-provenance)"
+    export GHE_TOKEN="$(cat /config/git-token)"
     export APP_REPO_NAME=${APP_REPO_NAME%.git}
     export GHE_ORG=${GHE_ORG##*/}
     export GHE_REPO=${GHE_REPO%.git}
