@@ -1,58 +1,41 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-. "${ONE_PIPELINE_PATH}/tools/get_repo_params"
+set -x
 
-APP_REPO="$(load_repo app-repo url)"
-APP_REPO_ORG=${APP_REPO%/*}
-APP_REPO_ORG=${APP_REPO_ORG##*/}
-APP_REPO_NAME=${APP_REPO##*/}
-APP_REPO_NAME=${APP_REPO_NAME%.git}
+echo "Inventory Add .....";
+echo "GIT_COMMIT=${GIT_COMMIT}"
+echo "GHE_ORG=${GHE_ORG}"
+echo "GHE_REPO=${GHE_REPO}"
+echo "SIGNATURE=${SIGNATURE}"
+echo "BUILD_NUMBER=${BUILD_NUMBER}"
+echo "PIPELINE_RUN_ID=${PIPELINE_RUN_ID}"
+echo "APP_REPO_NAME=${APP_REPO_NAME}"
+echo "APP_REPO=${APP_REPO}"
+echo "ARTIFACT_PROVENANCE=${ARTIFACT_PROVENANCE}"
+echo "SHA_VAL=${SHA_VAL}"
+echo "VERSION=${VERSION}"
+echo "TYPE=${TYPE}"
+echo "BUILD_IMAGE_TAG=${BUILD_IMAGE_TAG}"
+echo "IMAGE_NAME=${IMAGE_NAME}"
+echo "COMMIT_BRANCH=${COMMIT_BRANCH}"
+
+APP_ARTIFACTS='{ "signature": "'${SIGNATURE}'", "provenance": "'${ARTIFACT_PROVENANCE}'", "image_tag": "'${BUILD_IMAGE_TAG}'", "image_name": "'${IMAGE_NAME}'", "branch": "'${COMMIT_BRANCH}'" }'
+
+cocoa inventory add \
+    --artifact="${ARTIFACT_PROVENANCE}" \
+    --repository-url="${APP_REPO}" \
+    --commit-sha="${GIT_COMMIT}" \
+    --build-number="${BUILD_NUMBER}" \
+    --pipeline-run-id="${PIPELINE_RUN_ID}" \
+    --version="${VERSION}" \
+    --name="${APP_REPO_NAME}" \
+    --app-artifacts="${APP_ARTIFACTS}" \
+    --sha256="${SHA_VAL}" \
+    --provenance="${ARTIFACT_PROVENANCE}" \
+    --signature="${SIGNATURE}" \
+    --type="${TYPE}"
 
 
-COMMIT_SHA="$(load_repo app-repo commit)"
+echo "Uploaded to artifactory"
 
-APP_ABSOLUTE_SCM_TYPE=$(get_absolute_scm_type "$APP_REPO")
-
-INVENTORY_TOKEN_PATH="./inventory-token"
-read -r INVENTORY_REPO_NAME INVENTORY_REPO_OWNER INVENTORY_SCM_TYPE INVENTORY_API_URL < <(get_repo_params "$(get_env INVENTORY_URL)" "$INVENTORY_TOKEN_PATH")
-
-#
-# collect common parameters into an array
-#
-params=(
-    --repository-url="${APP_REPO}"
-    --commit-sha="${COMMIT_SHA}"
-    --version="${COMMIT_SHA}"
-    --build-number="${BUILD_NUMBER}"
-    --pipeline-run-id="${PIPELINE_RUN_ID}"
-    --org="$INVENTORY_REPO_OWNER"
-    --repo="$INVENTORY_REPO_NAME"
-    --git-provider="$INVENTORY_SCM_TYPE"
-    --git-token-path="$INVENTORY_TOKEN_PATH"
-    --git-api-url="$INVENTORY_API_URL"
-)
-
-
-#
-# add all built images as build artifacts to the inventory
-#
-while read -r artifact; do
-    image="$(load_artifact "${artifact}" name)"
-    signature="$(load_artifact "${artifact}" signature)"
-    digest="$(load_artifact "${artifact}" digest)"
-    tags="$(load_artifact "${artifact}" tags)"
-
-    APP_NAME="$(get_env app-name)"
-    APP_ARTIFACTS='{ "app": "'${APP_NAME}'", "tags": "'${tags}'" }'
-
-    cocoa inventory add \
-        --artifact="${image}@${digest}" \
-        --name="${APP_REPO_NAME}" \
-        --app-artifacts="${APP_ARTIFACTS}" \
-        --signature="${signature}" \
-        --provenance="${image}@${digest}" \
-        --sha256="${digest}" \
-        --type="image" \
-        "${params[@]}"
-done < <(list_artifacts)
 
