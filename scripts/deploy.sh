@@ -3,10 +3,10 @@
 # shellcheck source=/dev/null
 source "${ONE_PIPELINE_PATH}"/tools/retry
 
-export IMAGE="$(load_artifact app-image name)"
+export IMAGE_TAG="$(load_artifact app-image name)"
 
 echo "############################################################################";
-echo "IMAGE_TAG=${IMAGE}"
+echo "IMAGE_TAG=${IMAGE_TAG}"
 echo "############################################################################";
 
 
