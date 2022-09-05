@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: node-app
-        image: us.icr.io/ci-lab-namespace/node-js-app:${IMAGE_TAG}
+        image: ${IMAGE_TAG}
         ports:
         - containerPort: 8080
