@@ -1,0 +1,22 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app-deployment
+  labels:
+    app: node-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-app
+  template:
+    metadata:
+      labels:
+        app: node-app 
+    spec:
+      containers:
+      - name: node-app
+        image: us.icr.io/ci-lab-namespace/node-js-app:${IMAGE_TAG}
+        ports:
+        - containerPort: 8080

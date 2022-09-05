@@ -3,6 +3,12 @@
 # shellcheck source=/dev/null
 source "${ONE_PIPELINE_PATH}"/tools/retry
 
+export IMAGE="$(load_artifact app-image name)"
+
+echo "############################################################################";
+echo "IMAGE_TAG=${IMAGE}"
+echo "############################################################################";
+
 
 if [ -f /config/api-key ]; then
   IBMCLOUD_API_KEY="$(cat /config/api-key)" # pragma: allowlist secret
@@ -33,4 +39,30 @@ else
 
     echo "steps completed for " ${IBMCLOUD_IKS_CLUSTER_ID}
 fi
+
+echo "************* Applying deployment.yaml ****************";
+    envsubst < deployment/deployment.yaml | kubectl apply -f -
+    if [[ $? -ne 0 ]]; then
+        echo "Error applying deployment.yaml"
+        exit 1;
+    fi
+echo
+
+echo "************* Applying service.yaml ****************";
+    kubectl apply -f deployment/service.yaml
+    if [[ $? -ne 0 ]]; then
+        echo echo "Error applying service.yaml"
+        exit 1;
+    fi
+echo
+
+echo "************* fetch app url ****************";
+    kubectl get service
+    if [[ $? -ne 0 ]]; then
+        echo echo "Error applying service.yaml"
+        exit 1;
+    fi
+echo
+
+echo "************* Deployment successful ****************";
 

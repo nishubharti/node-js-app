@@ -1,0 +1,3 @@
+# Exclude the dockerfile from scanning
+Dockerfile
+*.yaml
