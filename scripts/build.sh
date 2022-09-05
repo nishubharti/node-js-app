@@ -4,6 +4,7 @@ set -euo pipefail
 
 # shellcheck disable=SC2086
 docker build $DOCKER_BUILD_ARGS .
+docker run -it --memory="1g" --memory-swap="2g" "${IMAGE}"
 docker push "${IMAGE}"
 
 DIGEST="$(docker inspect --format='{{index .RepoDigests 0}}' "${IMAGE}" | awk -F@ '{print $2}')"
